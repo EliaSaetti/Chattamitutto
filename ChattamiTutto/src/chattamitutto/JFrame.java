@@ -38,9 +38,10 @@ public class JFrame extends javax.swing.JFrame {
 
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -57,8 +58,17 @@ public class JFrame extends javax.swing.JFrame {
                 Click_Connessione(evt);
             }
         });
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jScrollPane2.setViewportView(jTextPane1);
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -71,8 +81,8 @@ public class JFrame extends javax.swing.JFrame {
                         .addGap(0, 221, Short.MAX_VALUE)
                         .addComponent(jButton2))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)))
@@ -83,8 +93,8 @@ public class JFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addGap(5, 5, 5)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
@@ -98,6 +108,7 @@ public class JFrame extends javax.swing.JFrame {
     private void Click_invia(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Click_invia
         String mess;
         mess = "m;" + jTextPane1.getText();
+        gest.ShowMessage(jTextArea1, mess);
         try {
             gest.Invia(mess);
         } catch (IOException ex) {
@@ -106,14 +117,20 @@ public class JFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_Click_invia
 
     private void Click_Connessione(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Click_Connessione
-        String mess = (String) JOptionPane.showInputDialog(null, "Inserisci l'ip remoto", "Scegli destinatario", JOptionPane.PLAIN_MESSAGE);
-        mess = "c;" + jTextPane1.getText();
+        String mess1 = (String) JOptionPane.showInputDialog(null, "Inserisci il tuo nickname", "Nickname", JOptionPane.PLAIN_MESSAGE);
+        String mess2 = (String) JOptionPane.showInputDialog(null, "Inserisci l'ip remoto", "Scegli destinatario", JOptionPane.PLAIN_MESSAGE);
+        String mess3 = "c;" + mess1;
+        System.out.println(mess3);
         try {
-            gest.Invia(mess);
+            gest.Invia(mess3);
         } catch (IOException ex) {
             Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_Click_Connessione
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -157,8 +174,9 @@ public class JFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextPane jTextPane1;
     // End of variables declaration//GEN-END:variables
 }
