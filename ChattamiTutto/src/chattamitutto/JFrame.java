@@ -18,13 +18,14 @@ import javax.swing.JOptionPane;
 public class JFrame extends javax.swing.JFrame {
 
     CGestione gest;
-
+    ThreadRicezione ricez;
     /**
      * Creates new form JFrame
      */
     public JFrame() throws SocketException {
         initComponents();
         gest = new CGestione();
+        ricez = new ThreadRicezione(this);
     }
 
     /**
@@ -42,8 +43,14 @@ public class JFrame extends javax.swing.JFrame {
         jTextPane1 = new javax.swing.JTextPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jButton1.setText("INVIA");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -70,6 +77,13 @@ public class JFrame extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
+        jButton3.setText("CHIUDI CONNESSIONE");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Click_Chiudi(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -77,23 +91,26 @@ public class JFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 221, Short.MAX_VALUE)
-                        .addComponent(jButton2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jButton2)
                 .addGap(5, 5, 5)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,6 +126,7 @@ public class JFrame extends javax.swing.JFrame {
         String mess;
         mess = "m;" + jTextPane1.getText();
         gest.ShowMessage(jTextArea1, mess);
+        System.out.println(mess);
         try {
             gest.Invia(mess);
         } catch (IOException ex) {
@@ -118,7 +136,9 @@ public class JFrame extends javax.swing.JFrame {
 
     private void Click_Connessione(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Click_Connessione
         String mess1 = (String) JOptionPane.showInputDialog(null, "Inserisci il tuo nickname", "Nickname", JOptionPane.PLAIN_MESSAGE);
+        gest.setNickName(mess1);
         String mess2 = (String) JOptionPane.showInputDialog(null, "Inserisci l'ip remoto", "Scegli destinatario", JOptionPane.PLAIN_MESSAGE);
+        System.out.println(mess2);
         String mess3 = "c;" + mess1;
         System.out.println(mess3);
         try {
@@ -129,8 +149,27 @@ public class JFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_Click_Connessione
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling co+de here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        try {
+            // TODO add your handling code here:
+            ricez.start();
+            ricez.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_formWindowOpened
+
+    private void Click_Chiudi(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Click_Chiudi
+        try {
+            // TODO add your handling code here:
+            gest.Invia("e;");
+        } catch (IOException ex) {
+            Logger.getLogger(JFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_Click_Chiudi
 
     /**
      * @param args the command line arguments
@@ -169,14 +208,19 @@ public class JFrame extends javax.swing.JFrame {
                 }
             }
         });
+        
+        
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
+    public javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextPane jTextPane1;
     // End of variables declaration//GEN-END:variables
 }

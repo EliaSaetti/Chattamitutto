@@ -21,40 +21,86 @@ public class CGestione {
 
     DatagramSocket server;
 
-    InetAddress lastAddress = null;
-    int lastPort = 0;
-    int stato=0;
+    InetAddress lastAddress;
+    int lastPort;
+    int stato;
+    String nickName;
+    String ip;
+    int statoY;
 
     public CGestione() throws SocketException {
         server = new DatagramSocket(2003);
+        lastAddress = null;
+        lastPort = 2003;
+        stato = 0;
+        nickName = "";
+        ip = "";
+        statoY = 0;
     }
 
-    synchronized public void setPorta(int porta) {
+    public void setPorta(int porta) {
         lastPort = porta;
     }
 
-    synchronized public int getPorta() {
+    public int getPorta() {
         return lastPort;
     }
-    
-    synchronized public int getStato(){
+
+    public int getStato() {
         return stato;
     }
-    
-    synchronized public void setStato(int s){
+
+    public void setStato(int s) {
         stato = s;
     }
 
-    public void Invia(String s) throws IOException {
-        if (lastAddress == null || lastPort == 0) {
+    public void setNickName(String nick) {
+        nickName = nick;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setIP(String ip) {
+        this.ip = ip;
+    }
+
+    public String getIP() {
+        return ip;
+    }
+
+    public void setStatoY(int y) {
+        statoY = y;
+    }
+
+    public int getStatoY() {
+        return statoY;
+    }
+
+    synchronized public void Invia(String s) throws IOException {
+        /*if (lastAddress == null || lastPort == 0) {
             return;
-        }
+        }*/
 
         byte[] buffer = s.getBytes();
         DatagramPacket p = new DatagramPacket(buffer, buffer.length);
         p.setAddress(lastAddress);
         p.setPort(lastPort);
         server.send(p);
+    }
+
+    public String Ricevi() throws IOException {
+        byte[] buffer = new byte[1500];
+        DatagramPacket p = new DatagramPacket(buffer, buffer.length);
+        server.receive(p);
+
+        String ip = p.getAddress().toString().substring(1);
+        setIP(ip);
+        lastAddress = p.getAddress();
+        lastPort = p.getPort();
+        String messaggio = new String(p.getData(), 0, p.getLength());
+        return messaggio;
     }
 
     public void ShowMessage(JTextArea j1, String mess1) {
